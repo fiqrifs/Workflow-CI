@@ -23,7 +23,7 @@ jobs:
         run: pip install mlflow
 
       - name: Run MLflow Project
-        run: mlflow run MLProject/ --experiment-name CI_Retrain
+        run: mlflow run MLProject/ --experiment-name CI_Retrain -P max_depth=None -P n_estimators=100
 
       - name: Upload artifacts (model & report)
         uses: actions/upload-artifact@v4
