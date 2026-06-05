@@ -1,0 +1,46 @@
+name: CI Retrain Model
+
+on:
+  push:
+    branches: [ main ]
+  # schedule:
+  #   - cron: '0 0 * * 0'   # mingguan, optional
+
+jobs:
+  retrain:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Miniconda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: true
+          python-version: 3.9
+
+      - name: Install MLflow
+        run: pip install mlflow
+
+      - name: Run MLflow Project
+        run: mlflow run MLProject/ --experiment-name CI_Retrain
+
+      - name: Upload artifacts (model & report)
+        uses: actions/upload-artifact@v4
+        with:
+          name: mlflow-artifacts
+          path: mlruns/   # atau sesuai output MLflow
+
+      # ------- ADVANCE: Build & Push Docker Image -------
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Build Docker image with mlflow
+        run: |
+          mlflow models build-docker -m "MLProject/model" -n "fiqri_fs/weather-retraining:latest"
+
+      - name: Push Docker image
+        run: docker push fiqri_fs/weather-retraining:latest

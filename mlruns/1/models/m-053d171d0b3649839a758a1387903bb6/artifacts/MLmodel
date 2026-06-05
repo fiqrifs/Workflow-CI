@@ -1,0 +1,23 @@
+artifact_path: file:D:/Me/AI LEARNING/DICODING/MLOPS/Eksperimen_SML_Fiqri-Fansyuri-Saragih/Workflow-CI/mlruns/1/models/m-053d171d0b3649839a758a1387903bb6/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.13.13
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.9.0
+    skops_trusted_types: null
+mlflow_version: 3.13.0
+model_id: m-053d171d0b3649839a758a1387903bb6
+model_size_bytes: 3200713
+model_uuid: m-053d171d0b3649839a758a1387903bb6
+prompts: null
+run_id: 05540a138db943638315505b94eca5fd
+utc_time_created: '2026-06-05 03:49:24.743730'
