@@ -31,10 +31,9 @@ jobs:
 
       - name: Get model path
         run: |
-          MODEL_PATH=$(find . -name "MLmodel" | grep "artifacts/model" | head -n 1 | xargs -r dirname)
+          MODEL_PATH=$(find . -name "MLmodel" | grep "models/" | head -n 1 | xargs -r dirname)
           if [ -z "$MODEL_PATH" ]; then
-            echo "❌ MLmodel tidak ditemukan! Struktur direktori:"
-            find . -name "MLmodel" 2>/dev/null || echo "Tidak ada MLmodel"
+            echo "❌ MLmodel tidak ditemukan!"
             exit 1
           fi
           echo "✅ Model path: $MODEL_PATH"
