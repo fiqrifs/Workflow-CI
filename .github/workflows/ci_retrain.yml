@@ -29,6 +29,17 @@ jobs:
             -P max_depth=None \
             -P n_estimators=100
 
+      - name: Get model path
+        run: |
+          MODEL_PATH=$(find mlruns -name "MLmodel" | grep "artifacts/model" | head -n 1 | xargs dirname)
+          if [ -z "$MODEL_PATH" ]; then
+            echo "❌ MLmodel tidak ditemukan! Struktur mlruns:"
+            find mlruns -type f | head -20
+            exit 1
+          fi
+          echo "✅ Model path: $MODEL_PATH"
+          echo "MODEL_PATH=$MODEL_PATH" >> $GITHUB_ENV
+
       - name: Upload MLflow artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -43,14 +54,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          MODEL_PATH=$(find mlruns -type d -name "model" | head -n 1)
-          if [ -z "$MODEL_PATH" ]; then
-            echo "❌ Model path tidak ditemukan!"
-            exit 1
-          fi
-          echo "✅ Model path: $MODEL_PATH"
           python -m mlflow models build-docker \
-            -m "$MODEL_PATH" \
+            -m "${{ env.MODEL_PATH }}" \
             -n "${{ secrets.DOCKER_USERNAME }}/weather-retraining:latest"
 
       - name: Push Docker image
